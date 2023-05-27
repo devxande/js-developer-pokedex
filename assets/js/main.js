@@ -1,5 +1,6 @@
 const pokemonList = document.getElementById('pokemonList')
 const loadMoreButton = document.getElementById('loadMoreButton')
+//const loadDetailsButton = document.querySelector('loadDetailsButton')
 
 const maxRecords = 151
 const limit = 10
@@ -14,11 +15,36 @@ function convertPokemonToLi(pokemon) {
             <div class="detail">
                 <ol class="types">
                     ${pokemon.types.map((type) => `<li class="type ${type}">${type}</li>`).join('')}
-                </ol>
-
+                </ol>  
+                
                 <img src="${pokemon.photo}"
-                     alt="${pokemon.name}">
+                     alt="${pokemon.name}"> 
+                                   
             </div>
+            <span>
+            <button class="loadDetailsButton" onclick="loadPokemonDetails()">Details</button>
+            </span>
+            
+        </li>
+    `
+}
+
+function convertDetailsPokemonToLi(pokemon){
+    return`
+        <li class="pokemon ${pokemon.type}">
+            <span class="number">#${pokemon.number}</span>
+            <span class="name">${pokemon.name}</span>
+
+            <div class="detail">
+                <ol class="types">
+                    ${pokemon.types.map((type) => `<li class="type ${type}">${type}</li>`).join('')}
+                </ol>  
+                <ol class="types">
+                    ${pokemon.abilities.map((ability) => `<li class="type ${ability}">${ability}</li>`).join('')}
+                </ol>  
+                <img src="${pokemon.photo}"
+                    alt="${pokemon.name}">                    
+            </div>            
         </li>
     `
 }
@@ -45,3 +71,12 @@ loadMoreButton.addEventListener('click', () => {
         loadPokemonItens(offset, limit)
     }
 })
+
+
+function loadPokemonDetails(offset,limit){
+    pokeApi.getPokemons(offset, limit).then((pokemons = []) => {
+        const newHtml = pokemons.map(convertDetailsPokemonToLi).join('')
+        pokemonList.innerHTML += newHtml
+    })
+}
+//loadPokemonDetails(offset,limit)
